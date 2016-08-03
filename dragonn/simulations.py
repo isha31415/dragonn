@@ -41,8 +41,10 @@ def simple_motif_embedding(motif_name, seq_length, num_seqs, GC_fraction):
         embed_in_background, num_seqs).generateSequences()
     sequence_arr = np.asarray(
         [generated_seq.seq for generated_seq in generated_sequences])
+    embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
 
     return sequence_arr
+    return embeddings_for_each_seq
 
 
 def motif_density(motif_name, seq_length, num_seqs,
@@ -71,9 +73,10 @@ def motif_density(motif_name, seq_length, num_seqs,
         embed_in_background, num_seqs).generateSequences()
     sequence_arr = np.asarray(
         [generated_seq.seq for generated_seq in generated_sequences])
+    embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
 
     return sequence_arr
-
+    return embeddings_for_each_seq
 
 def simulate_single_motif_detection(motif_name, seq_length,
                                     num_pos, num_neg, GC_fraction):
@@ -109,8 +112,11 @@ def simulate_single_motif_detection(motif_name, seq_length,
         None, seq_length, num_neg, GC_fraction)
     sequence_arr = np.concatenate((motif_sequence_arr, random_sequence_arr))
     y = np.array([[True]] * num_pos + [[False]] * num_neg)
+    #BELOW IS ADDED
+    embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
 
     return sequence_arr, y
+    return embeddings_for_each_seq
 
 
 def simulate_motif_counting(motif_name, seq_length, pos_counts, neg_counts,
@@ -144,7 +150,8 @@ def simulate_motif_counting(motif_name, seq_length, pos_counts, neg_counts,
     sequence_arr = np.concatenate(
         (pos_count_sequence_array, neg_count_sequence_array))
     y = np.array([[True]] * num_pos + [[False]] * num_neg)
-
+    #BELOW IS ADDED
+    embeddings_for_each_seq = [generated_sequences]
     return sequence_arr, y
 
 
@@ -195,7 +202,8 @@ def simulate_motif_density_localization(
     sequence_arr = np.concatenate(
         (localized_density_sequence_array, unlocalized_density_sequence_array))
     y = np.array([[True]] * num_pos + [[False]] * num_neg)
-
+    #BELOW IS ADDED
+    embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
     return sequence_arr, y
 
 
@@ -219,7 +227,8 @@ def simulate_multi_motif_embedding(motif_names, seq_length, min_num_motifs,
     y : ndarray
         Contains labels for each motif.
     """
-
+    return embeddings_for_each_seq
+    print("hi")
     def get_embedder(motif_name):
         substring_generator = PwmSamplerFromLoadedMotifs(
             loaded_motifs, motif_name)
@@ -246,6 +255,7 @@ def simulate_multi_motif_embedding(motif_names, seq_length, min_num_motifs,
     y = data_arr[:, 1:].astype(bool)
 
     return sequence_arr, y
+
 
 
 def simulate_differential_accessibility(
@@ -283,8 +293,11 @@ def simulate_differential_accessibility(
     sequence_arr = np.concatenate(
         (pos_motif_sequence_arr, neg_motif_sequence_arr))
     y = np.array([[True]] * num_pos + [[False]] * num_neg)
-
+    #BELOW IS ADDED
+    embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
     return sequence_arr, y
+    return embeddings_for_each_seq
+    print("hi")
 
 
 def simulate_heterodimer_grammar(
@@ -332,5 +345,9 @@ def simulate_heterodimer_grammar(
     sequence_arr = np.concatenate(
         (grammar_sequence_arr, nongrammar_sequence_arr))
     y = np.array([[True]] * num_pos + [[False]] * num_neg)
+    #BELOW IS ADDED
+    embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
 
     return sequence_arr, y
+    return embeddings_for_each_seq
+    print("hi")
