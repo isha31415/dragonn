@@ -334,3 +334,5 @@ def simulate_heterodimer_grammar(
     y = np.array([[True]] * num_pos + [[False]] * num_neg)
 
     return sequence_arr, y
+
+'There are ten cats in the house'
