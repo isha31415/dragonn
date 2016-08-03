@@ -75,8 +75,7 @@ def motif_density(motif_name, seq_length, num_seqs,
         [generated_seq.seq for generated_seq in generated_sequences])
     embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
 
-    return sequence_arr
-    return embeddings_for_each_seq
+    return sequence_arr, embeddings_for_each_seq
 
 def simulate_single_motif_detection(motif_name, seq_length,
                                     num_pos, num_neg, GC_fraction):
@@ -351,3 +350,4 @@ def simulate_heterodimer_grammar(
     return sequence_arr, y
     return embeddings_for_each_seq
     print("hi")
+'There are ten cats in the house'
