@@ -66,12 +66,11 @@ def get_pssm_scores(encoded_sequences, pssm):
 
 
 def one_hot_encode(sequences):
-    #print(sequences)
     sequence_length = len(sequences[0])
-    integer_type = np.int8 if sys.version_info[
-        0] == 2 else np.int32  # depends on Python version
-    integer_array = LabelEncoder().fit(np.array(('ACGTN',)).view(integer_type)).transform(
-        sequences.view(integer_type)).reshape(len(sequences), sequence_length)
+    #integer_type = np.int8 if sys.version_info[
+    #    0] == 2 else np.int32  # depends on Python version
+    integer_array = LabelEncoder().fit(np.array(('ACGTN',))).transform(
+        sequences).reshape(len(sequences), sequence_length)
     one_hot_encoding = OneHotEncoder(
         sparse=False, n_values=5).fit_transform(integer_array)
 

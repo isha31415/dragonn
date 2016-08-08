@@ -254,6 +254,8 @@ class GeneratedSequence(object):
         self.embeddings = embeddings
         self.additionalInfo = additionalInfo
 
+#You would get that information from the embeddings objects
+# Each embedding represents a motif that has been inserted, and the embedding object contains position information
 
 class Embedding(object):
     """
@@ -269,17 +271,16 @@ class Embedding(object):
         """
         self.what = what
         self.startPos = startPos
-
+    #This is where embedding info is printed
     def __str__(self):
+        print "pos-" + str(self.startPos) + "_" + str(self.what)
         return "pos-" + str(self.startPos) + "_" + str(self.what)
+
 
     @classmethod
     def fromString(cls, string, whatClass=None):
         if (whatClass is None):
             whatClass = StringEmbeddable
-        # was printed out as pos-[startPos]_[what], but the
-        #[what] may contain underscores, hence the maxsplit
-        # to avoid splitting on them.
         prefix, startPos, whatString = re.split("-|_", string, maxsplit=2)
         return cls(what=whatClass.fromString(whatString), startPos=startPos)
 

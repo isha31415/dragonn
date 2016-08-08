@@ -146,7 +146,7 @@ class SequenceDNN(Model):
             num_positives = y.sum()
             num_sequences = len(y)
             num_negatives = num_sequences - num_positives
-        self.callbacks = [EarlyStopping(monitor='val_loss', patience=5)]
+        self.callbacks = [EarlyStopping(monitor='val_loss', patience=3)] #JUST CHANGED THIS!!!!!!!
         if self.verbose >= 1:
             self.callbacks.append(self.PrintMetrics(validation_data, self))
             print('Training model...')

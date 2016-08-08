@@ -16,6 +16,7 @@ from dragonn.models import SequenceDNN
 from dragonn.plot import add_letters_to_axis, plot_motif
 
 Data = namedtuple('Data', ['X_train', 'X_valid', 'X_test',
+                            'embeddings_train', 'embeddings_valid', 'embeddings_test',
                            'y_train', 'y_valid', 'y_test',
                            'motif_names'])
 
@@ -47,7 +48,7 @@ def get_simulation_data(simulation_name, simulation_parameters,
                         test_set_size=4000, validation_set_size=3200):
     simulation_function = get_simulation_function(simulation_name)
     try:
-        sequences, y = simulation_function(**simulation_parameters)
+        sequences, y, embeddings_for_each_seq = simulation_function(**simulation_parameters)
     except Exception as e:
         return
 
@@ -59,15 +60,15 @@ def get_simulation_data(simulation_name, simulation_parameters,
     else:
         motif_names = [simulation_parameters["motif_name"]]
 
-    train_sequences, test_sequences, y_train, y_test = train_test_split(
-        sequences, y, test_size=test_set_size)
+    train_sequences, test_sequences, train_embeddings, test_embeddings, y_train, y_test = train_test_split(
+        sequences, embeddings, y, test_size=test_set_size)
     train_sequences, valid_sequences, y_train, y_valid = train_test_split(
         train_sequences, y_train, test_size=validation_set_size)
     X_train = one_hot_encode(train_sequences)
     X_valid = one_hot_encode(valid_sequences)
     X_test = one_hot_encode(test_sequences)
 
-    return Data(X_train, X_valid, X_test, y_train, y_valid, y_test, motif_names)
+    return Data(X_train, X_valid, X_test, embeddings_train, embeddings_value, embeddings_test, y_train, y_valid, y_test, motif_names)
 
 
 def inspect_SequenceDNN():

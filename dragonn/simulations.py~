@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function
 import numpy as np
-import pdb
-import random
+import pdb 
+import random 
 from dragonn.synthetic.synthetic import (
     RepeatedEmbedder, SubstringEmbedder, ReverseComplementWrapper,
     UniformPositionGenerator, InsideCentralBp,
@@ -66,12 +66,6 @@ def simple_motif_embedding(motif_name, seq_length, num_seq, GC_fraction):
     return sequence_arr, embedding_arr
     #return sequence_arr, embeddings_for_each_seq
 
-deep_cnn_motif_density_parameters = {
-    'seq_length': 500,
-    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
-    'num_filters': (15,),
-    'conv_width': (15,)}
-
 def motif_density(motif_name, seq_length, num_seq,
                   min_counts, max_counts, GC_fraction,
                   central_bp=None):
@@ -102,17 +96,17 @@ def motif_density(motif_name, seq_length, num_seq,
          for generated_seq in generated_sequences])
     sequence_arr = sequence__and_embedding_arr[:, 0]
     embedding_arr = sequence__and_embedding_arr[:, 1]
-    positions_array=[]
-    motif_name_array=[]
+    positions_array=[] 
+    motif_name_array=[] 
     #embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
     for x in range(0,len(sequence__and_embedding_arr)):
         for y in range(0, len(sequence__and_embedding_arr[x])):
             try:
                 positions_array.append(embedding_arr[x][y].what)
                 motif_name_array.append(embedding_arr[x][y].startPos)
-            except:
-                print("Warning! cannot call 'what' on a string object, skipping this embedding")
-    return sequence_arr, embedding_arr,positions_array,motif_name_array
+            except: 
+                print("Warning! cannot call 'what' on a string object, skipping this embedding") 
+    return sequence_arr, embedding_arr,positions_array,motif_name_array 
     #return sequence_arr, embeddings_for_each_seq
 
 
@@ -124,8 +118,8 @@ def pos_neg(motif_name, seq_length, num_seq,
     positive_set,positive_embedding,positive_positions_arr,positive_motif_name_arr = motif_density(motif_name, seq_length, num_seq,
                       min_counts, max_counts, GC_fraction,
                       central_bp=None)
-    #pdb.set_trace()
-
+    #pdb.set_trace() 
+    
     random.shuffle(positive_set)
     thresh_positive=int(0.3*(len(positive_set)))
     validation_positive_set = positive_set[0:thresh_positive]
@@ -134,7 +128,7 @@ def pos_neg(motif_name, seq_length, num_seq,
     negative_set,negative_embedding,negative_positions_arr,negative_motif_name_arr = motif_density(motif_name, seq_length, num_seq,
                       min_counts = 0, max_counts = 0, GC_fraction = .4,
                       central_bp=None)
-    random.shuffle(negative_set)
+    random.shuffle(negative_set) 
     thresh_negative=int(0.3*(len(negative_set)))
     validation_negative_set = negative_set[0:thresh_negative]
     training_negative_set = negative_set[thresh_negative:]
@@ -146,18 +140,18 @@ def pos_neg(motif_name, seq_length, num_seq,
     positive_labels = np.ones(training_positive_set.shape)
     positive_labels=np.reshape(positive_labels,(len(positive_labels),1))
     negative_labels = np.zeros(training_negative_set.shape)
-    negative_labels=np.reshape(negative_labels,(len(negative_labels),1))
-    training_labels = np.concatenate((positive_labels, negative_labels),axis=0)
+    negative_labels=np.reshape(negative_labels,(len(negative_labels),1)) 
+    training_labels = np.concatenate((positive_labels, negative_labels),axis=0) 
 
     pos_val_labels=np.ones(validation_positive_set.shape)
     pos_val_labels=np.reshape(pos_val_labels,(len(pos_val_labels),1))
     neg_val_labels=np.zeros(validation_negative_set.shape)
     neg_val_labels=np.reshape(neg_val_labels,(len(neg_val_labels),1))
     validation_labels=np.concatenate((pos_val_labels,neg_val_labels),axis=0)
-    #pdb.set_trace()
-    training_set=one_hot_encode(np.array([i for i in training_set]));
-    validation_set=one_hot_encode(np.array([i for i in validation_set]));
-    return training_labels,training_set,validation_labels,validation_set,positive_positions_arr,positive_motif_name_arr,negative_positions_arr,negative_motif_name_arr
+    #pdb.set_trace() 
+    training_set=one_hot_encode(np.array([i for i in training_set])); 
+    validation_set=one_hot_encode(np.array([i for i in validation_set])); 
+    return training_labels,training_set,validation_labels,validation_set,positive_positions_arr,positive_motif_name_arr,negative_positions_arr,negative_motif_name_arr 
 
 def simulate_single_motif_detection(motif_name, seq_length,
                                     num_pos, num_neg, GC_fraction):
@@ -202,6 +196,7 @@ def simulate_single_motif_detection(motif_name, seq_length,
     return sequence_arr, embedding_arr
     #return sequence_arr, embeddings_for_each_seq
 
+
 def simulate_motif_counting(motif_name, seq_length, pos_counts, neg_counts,
                             num_pos, num_neg, GC_fraction):
     """
@@ -241,6 +236,7 @@ def simulate_motif_counting(motif_name, seq_length, pos_counts, neg_counts,
     #embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
     return sequence_arr, embedding_arr
     #return sequence_arr, embeddings_for_each_seq
+
 
 def simulate_motif_density_localization(
         motif_name, seq_length, center_size, min_motif_counts,
@@ -298,6 +294,7 @@ def simulate_motif_density_localization(
     return sequence_arr, embedding_arr
     #return sequence_arr, embeddings_for_each_seq
 
+
 def simulate_multi_motif_embedding(motif_names, seq_length, min_num_motifs,
                                    max_num_motifs, num_seq, GC_fraction):
     """
@@ -352,6 +349,7 @@ def simulate_multi_motif_embedding(motif_names, seq_length, min_num_motifs,
     return sequence_arr, embedding_arr
     #return sequence_arr, embeddings_for_each_seq
 
+
 def simulate_differential_accessibility(
         pos_motif_names, neg_motif_names, seq_length,
         min_num_motifs, max_num_motifs, num_pos, num_neg, GC_fraction):
@@ -396,6 +394,7 @@ def simulate_differential_accessibility(
     #embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
     return sequence_arr, embedding_arr
     #return sequence_arr, embeddings_for_each_seq
+
 
 def simulate_heterodimer_grammar(
         motif1, motif2, seq_length,
@@ -455,18 +454,15 @@ def simulate_heterodimer_grammar(
 def main():
     print('There are eleven cats in the house')
     #sequences, embeddings = motif_density("TAL1_known4", 1000, 50, 2, 4, .4, central_bp=None)
-    seqLen=500
-    training_labels,training_set,validation_labels,validation_set,positive_pos,positive_motifs,negative_pos,negative_motifs=pos_neg("TAL1_known4",seqLen, 5000, 2, 4, .4, central_bp=None)
-    print(len(training_set))
-    myModel=SequenceDNN(**deep_cnn_motif_density_parameters)
-    training_labels=np.array([int(i) for i in training_labels])
+    seqLen=1000
+    training_labels,training_set,validation_labels,validation_set,positive_pos,positive_motifs,negative_pos,negative_motifs=pos_neg("TAL1_known4",seqLen, 50, 2, 4, .4, central_bp=None)
+    myModel=SequenceDNN(seqLen)
+    training_labels=np.array([int(i) for i in training_labels]) 
     validation_labels=np.array([int(i) for i in validation_labels])
     training_labels=np.reshape(training_labels,(len(training_labels),1))
     validation_labels=np.reshape(validation_labels,(len(validation_labels),1))
     myModel.train(training_set,training_labels.astype(np.bool),tuple([validation_set,validation_labels.astype(np.bool)]))
     dLArray=myModel.deeplift(training_set)
-    print(dLArray)
-
 
 
 
