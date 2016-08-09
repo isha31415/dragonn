@@ -146,11 +146,11 @@ def motif_density(motif_name, seq_length, num_seq,
     #embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
     for x in range(0,len(sequence__and_embedding_arr)):
         for y in range(0, len(sequence__and_embedding_arr[x])):
-            try:
-                positions_array.append(embedding_arr[x][y].what)
-                motif_name_array.append(embedding_arr[x][y].startPos)
-            except:
-                print("Warning! cannot call 'what' on a string object, skipping this embedding")
+            #try:
+            #positions_array.append(embedding_arr[x][y].what)
+            motif_name_array.append(embedding_arr[x][y].startPos)
+            #except:
+            #    print("Warning! cannot call 'what' on a string object, skipping this embedding")
     return sequence_arr, embedding_arr,positions_array,motif_name_array
     #return sequence_arr, embeddings_for_each_seq
 
@@ -523,6 +523,7 @@ def main(simulation_Name):
 if __name__=="__main__":
     main("Heterodimer Grammar")
 
+'''
 def histogram_positive_motifs():
     a = [this is our array] #positive deeplift scores
     plt.hist(a, bins = 100, normed = False, density = False)
@@ -534,3 +535,4 @@ def histogram_negative_motifs():
     plt.hist(a, bins = 100, normed = False, density = False)
     plt.title('Instances of Negative Motif Scores')
     plt.show()
+'''
