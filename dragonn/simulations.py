@@ -16,10 +16,59 @@ from utils import one_hot_encode
 from pkg_resources import resource_filename
 from models import SequenceDNN
 from models import Model
+import matplotlib.pyplot as plt
 
 
 ENCODE_MOTIFS_PATH = resource_filename('dragonn.synthetic', 'motifs.txt.gz')
 loaded_motifs = LoadedEncodeMotifs(ENCODE_MOTIFS_PATH, pseudocountProb=0.001)
+
+deep_cnn_MOTIF_DENSITY_parameters = {
+    'seq_length': 500,
+    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
+    'num_filters': (15,),
+    'conv_width': (15,)}
+
+deep_cnn_SIMPLE_MOTIF_EMBEDDING_parameters = {
+    'seq_length': 500,
+    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
+    'num_filters': (15,),
+    'conv_width': (15,)}
+
+deep_cnn_SIMULATE_SINGLE_MOTIF_DETECTION_parameters = {
+    'seq_length': 500,
+    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
+    'num_filters': (15,),
+    'conv_width': (15,)}
+
+deep_cnn_SIMULATE_MOTIF_COUNTING_parameters = {
+    'seq_length': 500,
+    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
+    'num_filters': (15,),
+    'conv_width': (15,)}
+
+deep_cnn_SIMULATE_MOTIF_DENSITY_LOCALIZATION_parameters = {
+    'seq_length': 500,
+    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
+    'num_filters': (15,),
+    'conv_width': (15,)}
+
+deep_cnn_SIMULATE_MULTI_MOTIF_EMBEDDING_parameters = {
+    'seq_length': 500,
+    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
+    'num_filters': (15,),
+    'conv_width': (15,)}
+
+deep_cnn_SIMULATE_DIFFERENTIAL_ACCESSIBILITY_parameters = {
+    'seq_length': 500,
+    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
+    'num_filters': (15,),
+    'conv_width': (15,)}
+
+deep_cnn_SIMULATE_HETERODIMER_GRAMMAR_parameters = {
+    'seq_length': 500,
+    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
+    'num_filters': (15,),
+    'conv_width': (15,)}
 
 def Deep_Lift_scores(motif_name, seq_length, num_seq,
                   min_counts, max_counts, GC_fraction,
@@ -31,14 +80,10 @@ def Deep_Lift_scores(motif_name, seq_length, num_seq,
 
     train(self, training_set, training_labels, validation_set)
 
-
-
 def get_distribution(GC_fraction):
     return DiscreteDistribution({
         'A': (1 - GC_fraction) / 2, 'C': GC_fraction / 2,
         'G': GC_fraction / 2, 'T': (1 - GC_fraction) / 2})
-
-
 
 def simple_motif_embedding(motif_name, seq_length, num_seq, GC_fraction):
     """
@@ -65,12 +110,6 @@ def simple_motif_embedding(motif_name, seq_length, num_seq, GC_fraction):
     #embeddings_for_each_seq = [generated_seq.embeddings for generated_seq in generated_sequences]
     return sequence_arr, embedding_arr
     #return sequence_arr, embeddings_for_each_seq
-
-deep_cnn_motif_density_parameters = {
-    'seq_length': 500,
-    #'use_deep_CNN': True, # we have to specify this option when using a deep CNN
-    'num_filters': (15,),
-    'conv_width': (15,)}
 
 def motif_density(motif_name, seq_length, num_seq,
                   min_counts, max_counts, GC_fraction,
@@ -114,7 +153,6 @@ def motif_density(motif_name, seq_length, num_seq,
                 print("Warning! cannot call 'what' on a string object, skipping this embedding")
     return sequence_arr, embedding_arr,positions_array,motif_name_array
     #return sequence_arr, embeddings_for_each_seq
-
 
 def pos_neg(motif_name, seq_length, num_seq,
                   min_counts, max_counts, GC_fraction,
@@ -452,13 +490,28 @@ def simulate_heterodimer_grammar(
     #return sequence_arr, embeddings_for_each_seq
 
 ############################################################################################################
-def main():
+def main(simulation_Name):
     print('There are eleven cats in the house')
     #sequences, embeddings = motif_density("TAL1_known4", 1000, 50, 2, 4, .4, central_bp=None)
     seqLen=500
     training_labels,training_set,validation_labels,validation_set,positive_pos,positive_motifs,negative_pos,negative_motifs=pos_neg("TAL1_known4",seqLen, 5000, 2, 4, .4, central_bp=None)
     print(len(training_set))
-    myModel=SequenceDNN(**deep_cnn_motif_density_parameters)
+    if (simulation_Name == "Simple Motif Embedding"):
+        myModel=SequenceDNN(**deep_cnn_SIMPLE_MOTIF_EMBEDDING_parameters)
+    if (simulation_Name == "Motif Density"):
+        myModel=SequenceDNN(**deep_cnn_MOTIF_DENSITY_parameters)
+    if (simulation_Name == "Single Motif Detection"):
+        myModel=SequenceDNN(**deep_cnn_SIMULATE_SINGLE_MOTIF_DETECTION_parameters)
+    if (simulation_Name == "Motif Counting"):
+        myModel=SequenceDNN(**deep_cnn_SIMULATE_MOTIF_COUNTING_parameters)
+    if (simulation_Name == "Motif Density Localization"):
+        myModel=SequenceDNN(**deep_cnn_SIMULATE_MOTIF_DENSITY_LOCALIZATION_parameters)
+    if (simulation_Name == "Multi Motif Embedding"):
+        myModel=SequenceDNN(**deep_cnn_SIMULATE_MULTI_MOTIF_EMBEDDING_parameters)
+    if (simulation_Name == "Differential Accessibility"):
+        myModel=SequenceDNN(**deep_cnn_SIMULATE_DIFFERENTIAL_ACCESSIBILITY_parameters)
+    if (simulation_Name == "Heterodimer Grammar"):
+        myModel=SequenceDNN(**deep_cnn_SIMULATE_HETERODIMER_GRAMMAR_parameters)
     training_labels=np.array([int(i) for i in training_labels])
     validation_labels=np.array([int(i) for i in validation_labels])
     training_labels=np.reshape(training_labels,(len(training_labels),1))
@@ -467,8 +520,17 @@ def main():
     dLArray=myModel.deeplift(training_set)
     print(dLArray)
 
-
-
-
 if __name__=="__main__":
-    main()
+    main("Heterodimer Grammar")
+
+def histogram_positive_motifs():
+    a = [this is our array] #positive deeplift scores
+    plt.hist(a, bins = 100, normed = False, density = False)
+    plt.title('Instances of Positive Motifs')
+    plt.show()
+
+def histogram_negative_motifs():
+    a = [this is our array] #negative deeplift scores
+    plt.hist(a, bins = 100, normed = False, density = False)
+    plt.title('Instances of Negative Motif Scores')
+    plt.show()
